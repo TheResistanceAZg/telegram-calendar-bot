@@ -1,0 +1,10 @@
+# Environment Variables
+.env
+
+# Google Credentials
+credentials/telegram_credentials.json
+credentials/token.json
+
+# Python Cache
+__pycache__/
+*.pyc
