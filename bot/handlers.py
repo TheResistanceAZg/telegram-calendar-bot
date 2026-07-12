@@ -1,6 +1,6 @@
 from telegram import Update
 from telegram.ext import ContextTypes
-from services.google_calendar import check_overlap
+from services.google_calendar import check_overlap, create_event
 from utils.date_helpers import extract_date_from_text, get_end_time
 
 async def check_availability(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -28,4 +28,6 @@ async def check_availability(update: Update, context: ContextTypes.DEFAULT_TYPE)
     if has_conflict:
         await update.message.reply_text("probably no")
     else:
-        await update.message.reply_text("probably yes")
+    # We are free! Let's add it to the calendar.
+        create_event(parsed_date, end_date, event_name="Tentative Plans")
+        await update.message.reply_text("probably yes, I just blocked it off on my calendar!")

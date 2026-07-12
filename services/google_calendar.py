@@ -9,7 +9,7 @@ from config.settings import CALENDAR_ID
 CREDENTIALS_PATH = os.path.join(os.path.dirname(__file__), '..', 'credentials', 'telegram_credentials.json')
 TOKEN_PATH = os.path.join(os.path.dirname(__file__), '..', 'credentials', 'token.json')
 
-SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
+SCOPES = ['https://www.googleapis.com/auth/calendar']
 
 def get_calendar_service():
     """Authenticates and returns the Google Calendar service."""
@@ -51,3 +51,20 @@ def check_overlap(start_time, end_time):
     
     events = events_result.get('items', [])
     return len(events) > 0
+def create_event(start_time, end_time, event_name="Busy (Scheduled via Telegram)"):
+    """Adds a new event to the calendar."""
+    service = get_calendar_service()
+    
+    event_details = {
+        'summary': event_name,
+        'start': {
+            'dateTime': start_time.isoformat(),
+            'timeZone': 'America/Chicago',
+        },
+        'end': {
+            'dateTime': end_time.isoformat(),
+            'timeZone': 'America/Chicago',
+        },
+    }
+    
+    service.events().insert(calendarId=CALENDAR_ID, body=event_details).execute()
